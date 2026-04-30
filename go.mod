@@ -1,4 +1,4 @@
-module github.com/YoshihideShirai/tuisvn
+module github.com/ljoli/atuisvn
 
 go 1.22
 

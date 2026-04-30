@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/YoshihideShirai/tuisvn/tui"
+	"github.com/ljoli/atuisvn/tui"
 )
 
 func main() {

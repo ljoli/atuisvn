@@ -15,7 +15,7 @@ It functions mainly as a svn repository browser like tig(https://github.com/jona
 ## Installation
 
 ~~~shell
-go install github.com/YoshihideShirai/tuisvn@latest
+go install github.com/ljoli/atuisvn@latest
 ~~~
 
 ## Key bindings
