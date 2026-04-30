@@ -16,6 +16,7 @@ func (t *Tui) NewTuiDiff(repos string, path string, rev string) {
 	diff_output := t.SvnDiff(repos, path, rev)
 
 	statusbar := TuiStatusBar(fmt.Sprintf("[%s]diff:%s:%s", repos, path, rev))
+	shortcutbar := TuiShortcutBar(" h/? help | j/k move | q back")
 	main := tview.NewTable().SetSelectable(true, false)
 
 	for i, v := range strings.Split(diff_output, "\n") {
@@ -33,10 +34,11 @@ func (t *Tui) NewTuiDiff(repos string, path string, rev string) {
 	}
 
 	s.prim.
-		SetRows(0, 1).
+		SetRows(0, 1, 1).
 		SetBorders(false).
 		AddItem(main, 0, 0, 1, 3, 0, 0, false).
-		AddItem(statusbar, 1, 0, 1, 3, 0, 0, false)
+		AddItem(statusbar, 1, 0, 1, 3, 0, 0, false).
+		AddItem(shortcutbar, 2, 0, 1, 3, 0, 0, false)
 
 	s.prim.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {

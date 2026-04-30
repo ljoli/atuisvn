@@ -20,3 +20,11 @@ func TuiStatusBar(text string) tview.Primitive {
 	v.SetText(text)
 	return v
 }
+
+func TuiShortcutBar(text string) tview.Primitive {
+	v := tview.NewTextView().
+		SetTextAlign(tview.AlignLeft)
+	v.SetBackgroundColor(tcell.ColorDarkSlateGray)
+	v.SetText(text)
+	return v
+}

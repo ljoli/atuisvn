@@ -10,6 +10,7 @@ func (t *Tui) NewTuiRoot() {
 		prim: tview.NewGrid(),
 	}
 	statusbar := TuiStatusBar("[.root]")
+	shortcutbar := TuiShortcutBar(" h/? help | j/k move | Enter open | q quit")
 	main := tview.NewTable().SetSelectable(true, false)
 
 	idx := 0
@@ -20,10 +21,11 @@ func (t *Tui) NewTuiRoot() {
 	}
 
 	s.prim.
-		SetRows(0, 1).
+		SetRows(0, 1, 1).
 		SetBorders(false).
 		AddItem(main, 0, 0, 1, 3, 0, 0, false).
-		AddItem(statusbar, 1, 0, 1, 3, 0, 0, false)
+		AddItem(statusbar, 1, 0, 1, 3, 0, 0, false).
+		AddItem(shortcutbar, 2, 0, 1, 3, 0, 0, false)
 
 	s.prim.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {

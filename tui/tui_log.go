@@ -54,6 +54,7 @@ func (t *Tui) NewTuiLog(repos string, path string) {
 		prim: tview.NewGrid(),
 	}
 	statusbar := TuiStatusBar(fmt.Sprintf("[%s]log:%s", repos, path))
+	shortcutbar := TuiShortcutBar(" h/? help | j/k move | Enter open rev | q back")
 	main := tview.NewTable().SetSelectable(true, false)
 	main.SetCell(0, 0, tview.NewTableCell(""))
 	main.SetCell(0, 1, tview.NewTableCell(""))
@@ -61,10 +62,11 @@ func (t *Tui) NewTuiLog(repos string, path string) {
 	main.SetCell(0, 3, tview.NewTableCell("").SetExpansion(1))
 
 	s.prim.
-		SetRows(0, 1).
+		SetRows(0, 1, 1).
 		SetBorders(false).
 		AddItem(main, 0, 0, 1, 3, 0, 0, false).
-		AddItem(statusbar, 1, 0, 1, 3, 0, 0, false)
+		AddItem(statusbar, 1, 0, 1, 3, 0, 0, false).
+		AddItem(shortcutbar, 2, 0, 1, 3, 0, 0, false)
 
 	go t.TuiLogUpdateWorker(repos, path, main)
 

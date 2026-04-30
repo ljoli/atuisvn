@@ -18,7 +18,7 @@ var helpBindings = map[string][]keyBinding{
 		{"k / ↑", "Move up"},
 		{"Enter", "Open repository"},
 		{"q", "Quit"},
-		{"?", "Toggle this help"},
+		{"h / ?", "Toggle this help"},
 	},
 	"tree": {
 		{"j / ↓", "Move down"},
@@ -26,27 +26,27 @@ var helpBindings = map[string][]keyBinding{
 		{"Enter", "Enter directory"},
 		{"l", "Open log for selection"},
 		{"q", "Back / Quit"},
-		{"?", "Toggle this help"},
+		{"h / ?", "Toggle this help"},
 	},
 	"log": {
 		{"j / ↓", "Move down"},
 		{"k / ↑", "Move up"},
 		{"Enter", "Open revision detail"},
 		{"q", "Back"},
-		{"?", "Toggle this help"},
+		{"h / ?", "Toggle this help"},
 	},
 	"rev": {
 		{"j / ↓", "Move down"},
 		{"k / ↑", "Move up"},
 		{"Enter", "Open diff for changed path"},
 		{"q", "Back"},
-		{"?", "Toggle this help"},
+		{"h / ?", "Toggle this help"},
 	},
 	"diff": {
 		{"j / ↓", "Move down"},
 		{"k / ↑", "Move up"},
 		{"q", "Back"},
-		{"?", "Toggle this help"},
+		{"h / ?", "Toggle this help"},
 	},
 }
 
@@ -98,7 +98,7 @@ func (t *Tui) ShowHelp() {
 			t.HideHelp()
 			return nil
 		case tcell.KeyRune:
-			if event.Rune() == 'q' || event.Rune() == '?' {
+			if event.Rune() == 'q' || event.Rune() == '?' || event.Rune() == 'h' || event.Rune() == 'H' {
 				t.HideHelp()
 				return nil
 			}

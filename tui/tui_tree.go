@@ -100,12 +100,14 @@ func (t *Tui) NewTuiTree(repos string, path string) {
 		prim: tview.NewGrid(),
 	}
 	statusbar := TuiStatusBar(fmt.Sprintf("[%s]tree:%s", repos, path))
+	shortcutbar := TuiShortcutBar(" h/? help | j/k move | Enter open dir | l log | q back")
 	main := tview.NewTable().SetSelectable(true, false)
 	s.prim.
-		SetRows(0, 1).
+		SetRows(0, 1, 1).
 		SetBorders(false).
 		AddItem(main, 0, 0, 1, 3, 0, 0, false).
-		AddItem(statusbar, 1, 0, 1, 3, 0, 0, false)
+		AddItem(statusbar, 1, 0, 1, 3, 0, 0, false).
+		AddItem(shortcutbar, 2, 0, 1, 3, 0, 0, false)
 
 	t.TuiTreeUpdate(repos, path, main)
 

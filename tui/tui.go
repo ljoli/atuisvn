@@ -82,13 +82,16 @@ func (t *Tui) CreateApp(repos string, screen string) {
 	t.app.SetRoot(t.pages, true)
 
 	t.app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		if event.Key() == tcell.KeyRune && event.Rune() == '?' {
-			if t.pages.HasPage("help") {
-				t.HideHelp()
-			} else {
-				t.ShowHelp()
+		if event.Key() == tcell.KeyRune {
+			switch event.Rune() {
+			case '?', 'h', 'H':
+				if t.pages.HasPage("help") {
+					t.HideHelp()
+				} else {
+					t.ShowHelp()
+				}
+				return nil
 			}
-			return nil
 		}
 		return event
 	})

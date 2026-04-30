@@ -23,33 +23,37 @@ go install github.com/ljoli/atuisvn@latest
 
 ## Key bindings
 
+- h / ? : Toggle help menu
+
+### main screen
+
+- j / k : Move down / up
+- Enter : Open repository
+- q : Quit
+
 ### tree screen
 
-- k : Move-up
-- j : Move-down
-- Enter : change directory
-- l : Enter log screen on selected file and directory.
-- q : Back previous screen.
+- j / k : Move down / up
+- Enter : Open directory
+- l : Open log screen on selected file or directory
+- q : Back / Quit
 
 ### log screen
 
-- k : Move-up
-- j : Move-down
-- Enter : Enter rev screen
-- q : Back previous screen.
+- j / k : Move down / up
+- Enter : Open revision screen
+- q : Back
 
 ### rev screen
 
-- k : Move-up
-- j : Move-down
-- Enter : Enter diff screen on change directory.
-- q : Back previous screen.
+- j / k : Move down / up
+- Enter : Open diff screen on changed path
+- q : Back
 
 ### diff screen
 
-- k : Move-up
-- j : Move-down
-- q : Back previous screen.
+- j / k : Move down / up
+- q : Back
 
 ## Usage
 
