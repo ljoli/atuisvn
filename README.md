@@ -54,6 +54,15 @@ go install github.com/ljoli/atuisvn@latest
 ### cat screen
 
 - j / k : Move down / up
+- gg / G : Go to first / last line
+- Ctrl+d / Ctrl+u : Half page down / up
+- Ctrl+f / Ctrl+b : Page down / up
+- { / } : Previous / next paragraph
+- /word : Search forward
+- ?word : Search backward
+- n / N : Next / previous search result
+- :n : Go to line n (example: :10)
+- s : Save file locally (edit path, then Enter)
 - q : Back
 
 ### diff screen

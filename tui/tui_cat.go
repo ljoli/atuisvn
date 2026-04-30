@@ -2,6 +2,8 @@ package tui
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -18,8 +20,9 @@ func (t *Tui) NewTuiCat(repos string, path string, rev string) {
 	lines := strings.Split(catOutput, "\n")
 	totalRows := len(lines)
 
-	statusbar := TuiStatusBar(fmt.Sprintf("[%s]cat:%s:%s", repos, path, rev))
-	shortcutbar := TuiShortcutBar(" h help | j/k/gg/G | ^d/u ^f/b scroll | / ? search | n/N | { } para | : goto | q back")
+	statusText := fmt.Sprintf("[%s]cat:%s:%s", repos, path, rev)
+	statusbar := TuiStatusBar(statusText)
+	shortcutbar := TuiShortcutBar(" h help | j/k/gg/G | ^d/u ^f/b scroll | / ? search | n/N | { } para | : goto | s save | q back")
 	main := tview.NewTable().SetSelectable(true, false)
 
 	lineNumWidth := len(fmt.Sprintf("%d", totalRows))
@@ -91,6 +94,11 @@ func (t *Tui) NewTuiCat(repos string, path string, rev string) {
 	inputPages := tview.NewPages()
 	inputPages.AddPage("empty", tview.NewBox(), true, true)
 	inputPages.AddPage("search", searchbar, true, false)
+	setStatus := func(msg string) {
+		if v, ok := statusbar.(*tview.TextView); ok {
+			v.SetText(msg)
+		}
+	}
 
 	closeInput := func() {
 		inputPages.SwitchToPage("empty")
@@ -122,6 +130,45 @@ func (t *Tui) NewTuiCat(repos string, path string, rev string) {
 		closeInput()
 	})
 
+	savebar := tview.NewInputField().
+		SetLabel(" save: ").
+		SetFieldBackgroundColor(tcell.ColorDarkSlateGray).
+		SetLabelColor(tcell.ColorOrange)
+	inputPages.AddPage("save", savebar, true, false)
+
+	suggestedPath := func() string {
+		name := filepath.Base(path)
+		if name == "." || name == "/" || name == "" {
+			name = "svn_cat_" + rev + ".txt"
+		}
+		return filepath.Join(".", name)
+	}
+
+	savebar.SetDoneFunc(func(key tcell.Key) {
+		if key == tcell.KeyEnter {
+			target := strings.TrimSpace(savebar.GetText())
+			if target == "" {
+				target = suggestedPath()
+			}
+			dir := filepath.Dir(target)
+			if dir != "." {
+				if err := os.MkdirAll(dir, 0o755); err != nil {
+					setStatus(fmt.Sprintf("save error: %v", err))
+					savebar.SetText("")
+					closeInput()
+					return
+				}
+			}
+			if err := os.WriteFile(target, []byte(catOutput), 0o644); err != nil {
+				setStatus(fmt.Sprintf("save error: %v", err))
+			} else {
+				setStatus(fmt.Sprintf("saved: %s", target))
+			}
+		}
+		savebar.SetText("")
+		closeInput()
+	})
+
 	// ── layout ────────────────────────────────────────────────────────────────
 	s.prim.
 		SetRows(0, 1, 1, 1).
@@ -148,6 +195,11 @@ func (t *Tui) NewTuiCat(repos string, path string, rev string) {
 	const fullPageSize = 30
 
 	s.prim.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		focus := t.app.GetFocus()
+		if focus == searchbar || focus == gotobar || focus == savebar {
+			return event
+		}
+
 		row, _ := main.GetSelection()
 
 		switch event.Key() {
@@ -239,6 +291,12 @@ func (t *Tui) NewTuiCat(repos string, path string, rev string) {
 			case ':':
 				inputPages.SwitchToPage("goto")
 				t.app.SetFocus(gotobar)
+				return nil
+			case 's':
+				savebar.SetText(suggestedPath())
+				inputPages.SwitchToPage("save")
+				t.app.SetFocus(savebar)
+				setStatus("save file: edit path then Enter")
 				return nil
 
 			case 'q':
