@@ -3,9 +3,9 @@
 ## What is tuisvn
 
 Tuisvn is subversion(svn) client.  
-It functions mainly as a svn repository browser like tig(https://github.com/jonas/tig).
+It functions mainly as a svn repository browser like [tig](https://github.com/jonas/tig).
 
-![](./docs/screenshot.png)
+![TuiSVN screenshot](./docs/screenshot.png)
 
 ## System requirement
 
@@ -53,12 +53,14 @@ go install github.com/ljoli/atuisvn@latest
 ~~~shell
 tuisvn [repository path or url]
 ~~~
+
 If argv is omitted, repository path is set the current directory.
 
 ## Development status
 
 Tuisvn is under development.  
 Implemented status is following...
+
 - [x] file and directory tree. (svn ls)
 - [x] revision history. (svn log)
 - [x] revision diff
