@@ -2,6 +2,7 @@ package tui
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/gdamore/tcell/v2"
@@ -13,7 +14,7 @@ func (t *Tui) NewTuiRev(repos string, path string, rev string) {
 		prim: tview.NewGrid(),
 	}
 	statusbar := TuiStatusBar(fmt.Sprintf("[%s]rev:%s:%s", repos, path, rev))
-	shortcutbar := TuiShortcutBar(" h/? help | j/k move | Enter open diff | q back")
+	shortcutbar := TuiShortcutBar(" h/? help | j/k move | Enter diff | c cat | q back")
 	main := tview.NewTable().SetSelectable(true, false)
 	idx := 0
 	revlog := t.SvnLog(repos, path, rev, rev, 1).Logentry[0]
@@ -105,6 +106,26 @@ func (t *Tui) NewTuiRev(repos string, path string, rev string) {
 					row++
 				}
 				main.Select(row, 0)
+				return nil
+			case 'c':
+				row, _ := main.GetSelection()
+				path_idx := row - path_idx_head
+				if path_idx < 0 || path_idx >= len(revlog.Path) {
+					return nil
+				}
+				catPath := revlog.Path[path_idx]
+				if catPath.Kind != "file" {
+					return nil
+				}
+				catRev := rev
+				if catPath.Action == "D" {
+					revInt, err := strconv.Atoi(strings.TrimPrefix(rev, "r"))
+					if err == nil && revInt > 1 {
+						catRev = fmt.Sprintf("r%d", revInt-1)
+					}
+				}
+				change_screen := "cat:" + catPath.Path + ":" + catRev
+				t.ChangeScreen(repos, change_screen)
 				return nil
 			case 'q':
 				t.BackScreen()

@@ -39,6 +39,13 @@ var helpBindings = map[string][]keyBinding{
 		{"j / ↓", "Move down"},
 		{"k / ↑", "Move up"},
 		{"Enter", "Open diff for changed path"},
+		{"c", "Open file content (svn cat)"},
+		{"q", "Back"},
+		{"h / ?", "Toggle this help"},
+	},
+	"cat": {
+		{"j / ↓", "Move down"},
+		{"k / ↑", "Move up"},
 		{"q", "Back"},
 		{"h / ?", "Toggle this help"},
 	},

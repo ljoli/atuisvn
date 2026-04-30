@@ -88,6 +88,31 @@ func (t *Tui) SvnDiff(repos string, path string, rev string) string {
 	return result
 }
 
+func (t *Tui) SvnCat(repos string, path string, rev string) string {
+	url := t.config.Repos[repos].Url + path
+	rev = strings.TrimPrefix(rev, "r")
+	cmd := exec.Command("svn", "cat", "-r", rev, url)
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	err := cmd.Run()
+	if err != nil {
+		t.TuiPanic(stderr.String())
+	}
+	output := stdout.String()
+	result := ""
+	for _, v := range strings.Split(output, "\n") {
+		out, err := DecodeAutoDetect([]byte(v))
+		if err != nil {
+			result += v + "\n"
+		} else {
+			result += out + "\n"
+		}
+	}
+	return result
+}
+
 func (t *Tui) SvnLogSummary(repos string, path string) *SvnLogXml {
 	t.svnworker_limiter <- struct{}{}
 	res := t.SvnLog(repos, path, "HEAD", "1", 1)

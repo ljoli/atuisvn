@@ -48,6 +48,12 @@ go install github.com/ljoli/atuisvn@latest
 
 - j / k : Move down / up
 - Enter : Open diff screen on changed path
+- c : Open file content at selected revision (svn cat)
+- q : Back
+
+### cat screen
+
+- j / k : Move down / up
 - q : Back
 
 ### diff screen
@@ -71,7 +77,7 @@ Implemented status is following...
 - [x] file and directory tree. (svn ls)
 - [x] revision history. (svn log)
 - [x] revision diff
-- [ ] revision cat
+- [x] revision cat
 
 ## License
 

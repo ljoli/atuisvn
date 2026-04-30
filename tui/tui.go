@@ -138,6 +138,9 @@ func (t *Tui) changeScreenImpl(repos string, screen string) {
 		} else if strings.HasPrefix(screen, "diff:") {
 			params := strings.Split(screen, ":")
 			t.NewTuiDiff(repos, params[1], params[2])
+		} else if strings.HasPrefix(screen, "cat:") {
+			params := strings.Split(screen, ":")
+			t.NewTuiCat(repos, params[1], params[2])
 		} else {
 			t.TuiPanic("bug:" + screen)
 		}
