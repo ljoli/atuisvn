@@ -55,6 +55,7 @@ var helpBindings = map[string][]keyBinding{
 		{"?", "Search backward"},
 		{"n / N", "Next / previous match"},
 		{":", "Go to line number"},
+		{"s", "Save cat output to local file"},
 		{"q", "Back"},
 		{"h / H", "Toggle this help"},
 	},
