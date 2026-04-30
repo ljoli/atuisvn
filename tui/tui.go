@@ -3,6 +3,7 @@ package tui
 import (
 	"strings"
 
+	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
 
@@ -76,7 +77,22 @@ func (t *Tui) CreateApp(repos string, screen string) {
 		SetBorders(false).
 		AddItem(titlebar, 0, 0, 1, 3, 0, 0, false)
 	t.root = grid
-	t.app.SetRoot(grid, true)
+	t.pages = tview.NewPages()
+	t.pages.AddPage("root", grid, true, true)
+	t.app.SetRoot(t.pages, true)
+
+	t.app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		if event.Key() == tcell.KeyRune && event.Rune() == '?' {
+			if t.pages.HasPage("help") {
+				t.HideHelp()
+			} else {
+				t.ShowHelp()
+			}
+			return nil
+		}
+		return event
+	})
+
 	t.ChangeScreen(repos, screen)
 }
 
