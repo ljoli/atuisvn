@@ -2,6 +2,7 @@ package tui
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/gdamore/tcell/v2"
@@ -17,7 +18,7 @@ func (t *Tui) NewTuiCat(repos string, path string, rev string) {
 	lines := strings.Split(catOutput, "\n")
 
 	statusbar := TuiStatusBar(fmt.Sprintf("[%s]cat:%s:%s", repos, path, rev))
-	shortcutbar := TuiShortcutBar(" h/? help | j/k move | / search | n/N next/prev | q back")
+	shortcutbar := TuiShortcutBar(" h/? help | j/k move | / search | n/N next/prev | : goto line | q back")
 	main := tview.NewTable().SetSelectable(true, false)
 
 	lineNumWidth := len(fmt.Sprintf("%d", len(lines)))
@@ -76,13 +77,31 @@ func (t *Tui) NewTuiCat(repos string, path string, rev string) {
 		}
 	})
 
+	gotobar := tview.NewInputField().
+		SetLabel(" : ").
+		SetFieldBackgroundColor(tcell.ColorDarkSlateGray).
+		SetLabelColor(tcell.ColorGreen).
+		SetAcceptanceFunc(tview.InputFieldInteger)
+
+	gotobar.SetDoneFunc(func(key tcell.Key) {
+		if key == tcell.KeyEnter {
+			n, err := strconv.Atoi(strings.TrimSpace(gotobar.GetText()))
+			if err == nil && n >= 1 && n <= len(lines) {
+				main.Select(n-1, 1)
+			}
+		}
+		gotobar.SetText("")
+		t.app.SetFocus(s.prim)
+	})
+
 	s.prim.
-		SetRows(0, 1, 1, 1).
+		SetRows(0, 1, 1, 1, 1).
 		SetBorders(false).
 		AddItem(main, 0, 0, 1, 3, 0, 0, false).
 		AddItem(searchbar, 1, 0, 1, 3, 0, 0, false).
-		AddItem(statusbar, 2, 0, 1, 3, 0, 0, false).
-		AddItem(shortcutbar, 3, 0, 1, 3, 0, 0, false)
+		AddItem(gotobar, 2, 0, 1, 3, 0, 0, false).
+		AddItem(statusbar, 3, 0, 1, 3, 0, 0, false).
+		AddItem(shortcutbar, 4, 0, 1, 3, 0, 0, false)
 
 	s.prim.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
@@ -108,6 +127,9 @@ func (t *Tui) NewTuiCat(repos string, path string, rev string) {
 				return nil
 			case '/':
 				t.app.SetFocus(searchbar)
+				return nil
+			case ':':
+				t.app.SetFocus(gotobar)
 				return nil
 			case 'q':
 				t.BackScreen()
