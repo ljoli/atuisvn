@@ -67,14 +67,21 @@ func (t *Tui) NewTuiCat(repos string, path string, rev string) {
 		main.Select(matches[currentMatch], 1)
 	}
 
+	// inputPages: hidden by default, shows searchbar or gotobar on demand
+	inputPages := tview.NewPages()
+	inputPages.AddPage("empty", tview.NewBox(), true, true)
+	inputPages.AddPage("search", searchbar, true, false)
+
+	closeInput := func() {
+		inputPages.SwitchToPage("empty")
+		t.app.SetFocus(s.prim)
+	}
+
 	searchbar.SetChangedFunc(func(text string) {
 		updateMatches(text)
 	})
-
 	searchbar.SetDoneFunc(func(key tcell.Key) {
-		if key == tcell.KeyEscape || key == tcell.KeyEnter {
-			t.app.SetFocus(s.prim)
-		}
+		closeInput()
 	})
 
 	gotobar := tview.NewInputField().
@@ -82,6 +89,7 @@ func (t *Tui) NewTuiCat(repos string, path string, rev string) {
 		SetFieldBackgroundColor(tcell.ColorDarkSlateGray).
 		SetLabelColor(tcell.ColorGreen).
 		SetAcceptanceFunc(tview.InputFieldInteger)
+	inputPages.AddPage("goto", gotobar, true, false)
 
 	gotobar.SetDoneFunc(func(key tcell.Key) {
 		if key == tcell.KeyEnter {
@@ -91,17 +99,16 @@ func (t *Tui) NewTuiCat(repos string, path string, rev string) {
 			}
 		}
 		gotobar.SetText("")
-		t.app.SetFocus(s.prim)
+		closeInput()
 	})
 
 	s.prim.
-		SetRows(0, 1, 1, 1, 1).
+		SetRows(0, 1, 1, 1).
 		SetBorders(false).
 		AddItem(main, 0, 0, 1, 3, 0, 0, false).
-		AddItem(searchbar, 1, 0, 1, 3, 0, 0, false).
-		AddItem(gotobar, 2, 0, 1, 3, 0, 0, false).
-		AddItem(statusbar, 3, 0, 1, 3, 0, 0, false).
-		AddItem(shortcutbar, 4, 0, 1, 3, 0, 0, false)
+		AddItem(inputPages, 1, 0, 1, 3, 0, 0, false).
+		AddItem(statusbar, 2, 0, 1, 3, 0, 0, false).
+		AddItem(shortcutbar, 3, 0, 1, 3, 0, 0, false)
 
 	s.prim.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
@@ -126,9 +133,11 @@ func (t *Tui) NewTuiCat(repos string, path string, rev string) {
 				gotoMatch(-1)
 				return nil
 			case '/':
+				inputPages.SwitchToPage("search")
 				t.app.SetFocus(searchbar)
 				return nil
 			case ':':
+				inputPages.SwitchToPage("goto")
 				t.app.SetFocus(gotobar)
 				return nil
 			case 'q':
