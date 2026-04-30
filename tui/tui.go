@@ -84,7 +84,13 @@ func (t *Tui) CreateApp(repos string, screen string) {
 	t.app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Key() == tcell.KeyRune {
 			switch event.Rune() {
-			case '?', 'h', 'H':
+			case '?':
+				// in cat view, ? is reverse search — let it pass through
+				if t.currentScreenType() == "cat" {
+					return event
+				}
+				fallthrough
+			case 'h', 'H':
 				if t.pages.HasPage("help") {
 					t.HideHelp()
 				} else {
