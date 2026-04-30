@@ -46,6 +46,9 @@ var helpBindings = map[string][]keyBinding{
 	"cat": {
 		{"j / ↓", "Move down"},
 		{"k / ↑", "Move up"},
+		{"/", "Open search bar"},
+		{"n / N", "Next / previous match"},
+		{"Esc / Enter", "Close search bar"},
 		{"q", "Back"},
 		{"h / ?", "Toggle this help"},
 	},
