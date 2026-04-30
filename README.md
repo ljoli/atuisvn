@@ -1,11 +1,14 @@
-# Tuisvn: Terminal user interface for Subversion
+# atuisvn: Terminal user interface for Subversion
 
-## What is tuisvn
+> **Fork** of [YoshihideShirai/tuisvn](https://github.com/YoshihideShirai/tuisvn) — original work by [Yoshihide Shirai](mailto:yoshihide.shirai@gmail.com).  
+> This fork bumps the Go baseline to 1.22, modernizes the CI workflows and migrates the module path to `github.com/ljoli/atuisvn`.
 
-Tuisvn is subversion(svn) client.  
+## What is atuisvn
+
+atuisvn is a Subversion (svn) client for the terminal.  
 It functions mainly as a svn repository browser like [tig](https://github.com/jonas/tig).
 
-![TuiSVN screenshot](./docs/screenshot.png)
+![atuisvn screenshot](./docs/screenshot.png)
 
 ## System requirement
 
@@ -68,6 +71,7 @@ Implemented status is following...
 
 ## License
 
-Copyright (C) 2022 [Yoshihide Shirai](mailto:yoshihide.shirai@gmail.com).
+Copyright (C) 2022 [Yoshihide Shirai](mailto:yoshihide.shirai@gmail.com).  
+Fork maintained by [ljoli](https://github.com/ljoli).
 
 Licensed under the [MIT License](LICENSE).
