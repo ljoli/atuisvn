@@ -69,6 +69,25 @@ tuisvn [repository path or url]
 
 If argv is omitted, repository path is set the current directory.
 
+## Build
+
+Requires [Go 1.24+](https://go.dev/dl/).
+
+~~~shell
+git clone https://github.com/ljoli/atuisvn.git
+cd atuisvn
+go build -o tuisvn .
+~~~
+
+The resulting `tuisvn` binary can be moved anywhere in your `$PATH`.
+
+On Windows, building inside WSL is recommended:
+
+~~~shell
+export PATH=/usr/local/go/bin:$PATH
+GOTOOLCHAIN=local go build -o tuisvn .
+~~~
+
 ## Development status
 
 Tuisvn is under development.  
